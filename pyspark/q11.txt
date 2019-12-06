@@ -1,0 +1,3 @@
+Mary's bar 	 2
+Joe's bar 	 2
+Bob's bar 	 1

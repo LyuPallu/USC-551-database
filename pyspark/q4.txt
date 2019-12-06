@@ -1,0 +1,6 @@
+Drinker	Beer
+Jennifer 	 Bud 
+Steve 	 Michelob 
+Steve 	 Summerbrew 
+Steve 	 Bud 
+Steve 	 Bud Lite 

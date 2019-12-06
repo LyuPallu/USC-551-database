@@ -1,0 +1,4 @@
+Bar	Average_price
+Mary's bar 	 2.5 
+Joe's bar 	 3.25 
+Bob's bar 	 3.0 
