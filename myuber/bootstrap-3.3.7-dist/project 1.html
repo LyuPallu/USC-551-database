@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Project_551</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- <link href="slider.css" rel="stylesheet" type="text/css" />  -->
+    <!-- 可选的 Bootstrap 主题文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js" integrity="sha256-wS9gmOZBqsqWxgIVgA8Y9WcQOa7PgSIX+rPA0VL2rbQ=" crossorigin="anonymous"></script>
+
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-database.js"></script>
+    <script src="https://kit.fontawesome.com/afa3fff295.js" crossorigin="anonymous"></script>
+   
+    <sytle>
+        body{padding: 40px; position:relative;}
+        i{cursor: pointer;}
+    </style>
+
+    <meta charset="utf-8">
+    <!-- 引入 ECharts 文件 -->
+    <script src="echarts.min.js"></script>
+
+</head>
+
+<body data-target="#navbar-spy" data-spy="scroll">
+    <header>
+        <nav class="navbar navbar-inverse navbar-fixed-top" id="navbar-spy">
+            <!-- Logo-->
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">Ｍy Uber</a>
+                </div>
+                <!-- 選單內容 -->
+                <div>
+                    <ul class="nav navbar-nav">
+                        <li><a data-toggle="tab" href="#menu1">DATASET</a></li>
+                    </ul>
+                </div>
+                <!-- 引入 GOOGLE SEARCH -->
+                <script>
+                    var domainroot="http://www.google.com"  //Enter domain of site to search.
+                    function Gsitesearch(curobj){ curobj.q.value="site:"+domainroot+" "+curobj.qfront.value } 
+                </script> 
+                <form class="search navbar-form navbar-right" action="http://www.google.com/search" method="get"role="search" onSubmit="Gsitesearch(this)"> 
+                    <div class="input-group"> <input name="q" type="hidden" /> 
+                        <input class="form-control" name="qfront" type="search" required class="searchField" placeholder="Google Site Search" maxlength="50"/> 
+                        <span class="input-group-btn"> <button type="submit" class="search-button btn btn-primary"> <span class="glyphicon glyphicon-search"></span> </button> </span> 
+                    </div> 
+                </form>
+                <!-- GOOGLE SEARCH END -->
+            </div>
+        </nav> 
+    </header>
+
+    <!-- Dataset Area -->
+    <div style="font-size:36px" class="tab-content">
+        <div id="menu1" class="tab-pane fade in active">
+            <div style="text-align: center;background: black;">
+                <img src="uber_pic.png">
+            </div>
+            <div class="row" style="margin-top: 3%;margin-left: 1%;">
+                <div class="col-xs-2" style="display: inline-flex; margin-left:16%;">
+                    <button type="button" class="btn btn-default" onclick="default_()">Default</button>
+                </div>
+                <div class="col-xs-2" style="display: inline-flex;">
+                    <input id= "search_item_2" type="search" class="form-control" placeholder="Enter the purpose" name="qfront"> 
+                    <button class="btn btn-default" type="submit" onclick="search_purpose()">Search</button>
+                </div>
+                <div class="col-xs-3" style="display: inline-flex;">
+                    <input id="small_" type="number" class="form-control" placeholder="Enter a num " value=0>
+                    <p style="font-size: 25px;margin: unset;">~</p>
+                    <input id="big_" type="number" class="form-control" placeholder="Enther a num" value=500>
+                    <button class="btn btn-default" type="submit" onclick="range_()">Miles Filter</button>
+                </div>
+            </div>
+
+            <table id="result" class ="table table-bordered" style="margin-top: 3%;width:80%;font-size:16px;margin-left:auto;margin-right:auto;">
+            <thead>
+                <tr>
+                    <th> </th>
+                    <!-- <th>sequence <i class="fas fa-caret-square-down" onclick=""></i><i class="fas fa-caret-square-up" onclick=""></i></th> -->
+                    <th>CATALOGY <i class="fas fa-caret-square-down" onclick="catalog_sort_down()"></i><i class="fas fa-caret-square-up" onclick="catalog_sort_up()"></i></th>
+                    <th>END DATE <i class="fas fa-caret-square-down" onclick="enddate_sort_down()"></i><i class="fas fa-caret-square-up" onclick="enddate_sort_up()"></i></th>
+                    <th>MILES <i class="fas fa-caret-square-down" onclick="mile_sort_down()"></i><i class="fas fa-caret-square-up" onclick="mile_sort_up()"></i></th>
+                    <th>PURPOSE <i class="fas fa-caret-square-down"onclick="purpose_sort_down()"></i><i class="fas fa-caret-square-up" onclick="purpose_sort_up()"></i></th>
+                    <th>START <i class="fas fa-caret-square-down" onclick="start_sort_down()"></i><i class="fas fa-caret-square-up" onclick="start_sort_up()"></i></th>
+                    <th>START DATE <i class="fas fa-caret-square-down" onclick="startdate_sort_down()"></i><i class="fas fa-caret-square-up" onclick="startdate_sort_up()"></i></th>
+                    <th>END LOCATION <i class="fas fa-caret-square-down" onclick="destination_sort_down()"></i><i class="fas fa-caret-square-up" onclick="destination_sort_up()"></i></th>
+                </tr>
+                <!-- visual -->
+                <tr>
+                    <!-- SLIDER -->
+                    <th>
+                        <!-- <button class="btn btn-default" type="submit" onclick="slider_()">%</button>
+                        <div id='volume' class='slider' > 
+                            <div class='slider-track'>
+                                <div class='slider-thumb'>100</div>
+                                <div class='slider-level'></div>
+                            </div>
+                            <input class='slider-input' type='range' value='100' min='0' max='100' />
+                        </div> -->
+                        <script>
+                            "use strict";
+                            function Slider(slider){
+                            this.slider = slider;
+                            var sldinput= this.slider.querySelector('.slider-input');//input
+                            var sldthumb= this.slider.querySelector('.slider-thumb');//中间按钮
+                            var sldlevel= this.slider.querySelector('.slider-level');//当前值显示的进度
+                            this.slider.addEventListener('input', function() {
+                                    // console.log('dddddddd');
+                                    this.updateSliderLevel();
+                                }.bind(this), false);
+                            
+                            this.updateSliderLevel =function() {
+                                var val=parseInt(sldinput.value);
+                                sldthumb.style.left = val + '%';//更新按钮的位置
+                                sldthumb.textContent = val;   //更新近钮上显示的值
+                                sldlevel.style.width = val + '%';//更新进度条的长度
+                            }
+                            }
+                            var volumeSlider =document.getElementById('volume');
+                            new Slider(volumeSlider);
+
+                            function slider_(){
+                            var volumn = 0;
+                            volumn = document.getElementById("volume").innerText;
+                            // volumn = sldthumb;
+                            console.log(volumn);
+                            var num=0;
+                            if(volumn != 0){
+                                num = Math.round(1155*(volumn*0.01));
+                            }
+                            console.log(num);
+                            if(num == 0){
+                                var srearchItem = "HELLO"
+                                console.log(srearchItem)
+                                var purpose_ = database.ref('/index').orderByChild('PURPOSE').equalTo(srearchItem);
+                                var djson;
+
+                                purpose_.on('value', function(snapshot){
+                                    djson_ = JSON.parse(JSON.stringify(snapshot.val()));
+
+                                    djson = jsonToArray(djson_)
+                                    console.log(djson)
+
+                                    // djson = djson.sort(up_compare("PURPOSE"));
+                                    // console.log(djson);
+                                    
+                                    var tr = "";
+                                    var i = 1;
+                                    for(x in djson){
+                                        if(djson[x] != null){
+                                            tr += "<tr>";
+                                            tr += "<td>"+i+"</td>";
+                                            tr += "<td>"+djson[x]["CATEGORY"]+"</td>";
+                                            tr += "<td>"+djson[x]["END_DATE"]+"</td>";
+                                            tr += "<td>"+djson[x]["MILES"]+"</td>";
+                                            tr += "<td>"+djson[x]["PURPOSE"]+"</td>";
+                                            tr += "<td>"+djson[x]["START"]+"</td>";
+                                            tr += "<td>"+djson[x]["START_DATE"]+"</td>";
+                                            tr += "<td>"+djson[x]["STOP"]+"</td>";
+                                            tr += "</tr>";
+                                            i ++; 
+                                        }    
+                                    }
+                                    document.querySelector("table tbody").innerHTML = tr;
+                                });
+                            }
+                            var prec_ = database.ref('/index').orderByChild('MILES').limitToFirst(num);
+                            var djson;
+                            var djson_;
+
+                            prec_.on('value', function(snapshot){
+                                djson_ = JSON.parse(JSON.stringify(snapshot.val()));
+
+                                djson = jsonToArray(djson_)
+                                console.log(djson)
+
+                                // djson = djson.sort(up_compare("PURPOSE"));
+                                // console.log(djson);
+                                
+                                var tr = "";
+                                var i = 1;
+                                for(x in djson){
+                                    if(djson[x] != null){
+                                        tr += "<tr>";
+                                        tr += "<td>"+i+"</td>";
+                                        tr += "<td>"+djson[x]["CATEGORY"]+"</td>";
+                                        tr += "<td>"+djson[x]["END_DATE"]+"</td>";
+                                        tr += "<td>"+djson[x]["MILES"]+"</td>";
+                                        tr += "<td>"+djson[x]["PURPOSE"]+"</td>";
+                                        tr += "<td>"+djson[x]["START"]+"</td>";
+                                        tr += "<td>"+djson[x]["START_DATE"]+"</td>";
+                                        tr += "<td>"+djson[x]["STOP"]+"</td>";
+                                        tr += "</tr>";
+                                        i ++; 
+                                    }    
+                                }
+                                document.querySelector("table tbody").innerHTML = tr;
+                            });
+
+
+                            }
+
+                        </script>
+                    </th>
+                    <!-- catalogy -->
+                    <th>
+                        <div id="main" style="width: 80px;height:80px;"></div>
+                        <script type="text/javascript">
+                            var myChart = echarts.init(document.getElementById('main'));
+                            var option = {
+                                title: {},
+                                tooltip: {},
+                                legend: {
+                                    show: false 
+                                },
+                                xAxis: {
+                                    show: false 
+                                    // data: ["Business","Personal"]
+                                },
+                                yAxis: {    
+                                        show: false 
+                                    },
+                                series: [{
+                                    type: 'pie',
+                                    data: [{value:1078, name:'Business'},
+                                            {value:77, name:'Personal'}]
+                                    // color:['Lightblue']
+                                }]
+                            };
+                            myChart.setOption(option);
+                        </script>
+                    </th>
+                    <!--1 //End_date -->
+                    <th>
+                            <div id="main1" style="width: 120px;height:60px;"></div>
+                            <script type="text/javascript">
+                                var myChart1 = echarts.init(document.getElementById('main1'));
+                                var option1 = {
+                                    title: {},
+                                    tooltip: {},
+                                    legend: {
+                                    },
+                                    xAxis: {
+                                        data: ["Jaunary","February","March","April","May","June","July",
+                                                "August","September","October","November","December"]
+                                    },
+                                    yAxis: {    
+                                        show: false 
+                                    },
+                                    series: [{
+                                        type: 'bar',
+                                        data: [61,115,113,54,49,108,112,133,36,106,122,146],
+                                        // color:['Lightblue']
+                                        color: ['#37A2DA', '#32C5E9', '#67E0E3', '#9FE6B8', '#FFDB5C','#ff9f7f', '#fb7293', '#E062AE', '#E690D1', '#e7bcf3', '#9d96f5', '#8378EA']
+                                    }]
+                                };
+                                myChart1.setOption(option1);
+                            </script>
+                        </th>
+                    <!--2 miles -->
+                    <th>
+                        <div id="main2" style="width: 150px;height:80px;"></div>
+                        <script type="text/javascript">
+                            var myChart2 = echarts.init(document.getElementById('main2'));
+                            var option2 = {
+                                title: {},
+                                tooltip: {},
+                                // grid:{
+                                //     x:1,
+                                //     y:1,
+                                //     x2:1,
+                                //     y2:1
+                                //     // borderWidth:1
+                                //     },
+                                legend: {
+                                    show: false 
+                                },
+                                xAxis: {
+                                    show: false
+                                    // data: ["[0-5)","[5-10)","[10-20)","[20-50)","[50- )"]
+                                },
+                                yAxis: {    
+                                    show: false 
+                                },
+                                series: [{
+                                    type: 'pie',
+                                    data: [{value:496, name:'[0,5)'},
+                                            {value:341,name:'[5.10)'},
+                                            {value:234,name:'[10,20)'},
+                                            {value:57, name:'[20,50)'},
+                                            {value:27, name:'[50, )'}]
+                                    // color:['Lightblue']
+                                }]
+                            };
+                            myChart2.setOption(option2);
+                        </script>
+                    </th>
+                    <!--3 purpose -->
+                    <th>
+                            <div id="main3" style="width: 160px;height:80px;"></div>
+                            <script type="text/javascript">
+                                var myChart3 = echarts.init(document.getElementById('main3'));
+                                var option3 = {
+                                    title: {},
+                                    tooltip: {},
+                                    grid:{
+                                    x:0.1,
+                                    y:0.1,
+                                    x2:0.1,
+                                    y2:0.1
+                                    // borderWidth:1
+                                    },
+                                    legend: {
+                                    },
+                                    xAxis: {
+                                        data: ["Other","Errand/Supplies","Meeting","Customer Visit",
+                                                "Temporary Site","Between Offices","Charity ($)","Commute",
+                                                "Moving","Airport/Travel"]
+                                    },
+                                    yAxis: {    
+                                        show: false 
+                                    },
+                                    series: [{
+                                        type: 'bar',
+                                        data: [160,502,128,187,101,50,18,1,1,4,3],
+                                         color:['#37A2DA']
+                                    }]
+                                };
+                                myChart3.setOption(option3);
+                            </script>
+                    </th>
+                    <!-- 4start -->
+                    <th>
+                            <div id="main4" style="width: 160px;height:80px;"></div>
+                            <script type="text/javascript">
+                                var myChart4 = echarts.init(document.getElementById('main4'));
+                                var option4 = {
+                                    title: {},
+                                    tooltip: {},
+                                    grid:{
+                                    x:0.1,
+                                    y:0.1,
+                                    x2:0.1,
+                                    y2:0.1
+                                    // borderWidth:1
+                                    },
+                                    legend: {
+                                    },
+                                    xAxis: {
+                                    data: ["Cary","Unknown Location","Morrisville","Whitebridge","Islamabad",
+                                            "Durham","Lahore","Raleigh","Kar?chi","Apex,Westpark Place",
+                                            "Berkeley","Midtown","R?walpindi,Kissimmee,Kenner",
+                                            "Emeryville,New Orleans","Downtown","Edgehill Farms,Colombo,Orlando,San Francisco,Banner Elk,Central",
+                                            "Hazelwood,The Drag,Oakland","Preston,Covington",
+                                            "Fort Pierce,Houston,Noorpur Shahan,South Congress,Sharpstown,Parkway,West Berkeley,Bryson City,Rawalpindi",
+                                            "New York,Tanglewood,Waverly Place,Wayne Ridge,Savon Height,CBD,Metairie,Karachi,Agnew,Southside",
+                                            "'Fayetteville Street': 3, 'Meredith Townes': 3, 'Northwoods': 3, 'Port Bolivar': 3, 'Menlo Park': 3, 'Huntington Woods': 3, 'Kalorama Triangle': 3",
+                                            " 'West Palm Beach': 2, 'Jamaica': 2, 'Hudson Square': 2, 'Farmington Woods': 2, 'Chapel Hill': 2, 'East Elmhurst': 2, 'Katunayaka': 2, 'Heritage Pines': 2, 'Weston': 2, 'West University': 2, 'Galveston': 2, 'Jacksonville': 2, 'Couples Glen': 2, 'Lake Reams': 2, 'Holly Springs': 2, 'Chessington': 2, 'Capitol One': 2, 'Palo Alto': 2, 'Newark': 2, 'Old City': 2, 'Kilarney Woods': 2, 'Storyville': 2, 'Pontchartrain Shores': 2, 'Mandeville': 2, 'Newland': 2, 'Boone': 2, 'Lexington Park at Amberly': 2, 'K Street': 2, 'SOMISSPO': 2, 'San Jose': 2, 'Asheville': 2, 'Topton': 2, 'Renaissance': 2, 'South': 2",
+                                            "'Elmhurst': 1, 'East Harlem': 1, 'Flatiron District': 1, 'Midtown East': 1, 'Lower Manhattan': 1, 'Hell's Kitchen': 1, 'Gulfton': 1, 'Eagan Park': 1, 'Lake Wellingborough': 1, 'Fairmont': 1, 'Eastgate': 1, 'Jackson Heights': 1, 'Long Island City': 1, 'Nugegoda': 1, 'East Austin': 1, 'Congress Ave District': 1, 'Red River District': 1, 'Georgian Acres': 1, 'North Austin': 1, 'Coxville': 1, 'Convention Center District': 1, 'Austin': 1, 'Katy': 1, 'Sugar Land': 1, 'Washington Avenue': 1, 'Briar Meadow': 1, 'Latta': 1, 'Sand Lake Commons': 1, 'Sky Lake': 1, 'Daytona Beach': 1, 'Ridgeland': 1, 'Florence': 1, 'Meredith': 1, 'Burtrose': 1, 'Mcvan': 1, 'University District': 1, 'Seattle': 1, 'Redmond': 1, 'Bellevue': 1, 'Sunnyvale': 1, 'Townes at Everett Crossing': 1, 'Seaport': 1, 'Medical Centre': 1, 'Rose Hill': 1, 'Soho': 1, 'Tribeca': 1, 'Financial District': 1, 'Lower Garden District': 1, 'Lakeview': 1, 'Chalmette': 1, 'Arabi': 1, 'Marigny': 1, 'Jamestown Court': 1, 'Summerwinds': 1, 'Parkwood': 1, 'Pontchartrain Beach': 1, 'St Thomas': 1, 'Elk Park': 1, 'Stonewater': 1, 'Arlington Park at Amberly': 1, 'Arlington': 1, 'West End': 1, 'Connecticut Avenue': 1, 'Columbia Heights': 1, 'Washington': 1, 'Wake Forest': 1, 'North Berkeley Hills': 1, 'Eagle Rock': 1, 'Winston Salem': 1, 'Hayesville': 1, 'Almond': 1, 'Mebane': 1, 'Cory': 1, 'Santa Clara': 1, 'NOMA': 1, 'Sunnyside': 1, 'Ingleside': 1, 'Tenderloin': 1, 'College Avenue': 1, 'South Berkeley': 1, 'Mountain View': 1, 'El Cerrito': 1, 'Krendle Woods': 1, 'Wake Co.': 1, 'Fuquay-Varina': 1, 'Katunayake': 1, 'Gampaha': 1"
+                                            ]
+                                    },
+                                    yAxis: {    
+                                        show: false 
+                                    },
+                                    series: [{
+                                        type: 'bar',
+                                        data: [201,148,85,68,57,
+                                                37,36,28,27,17,
+                                                16,14,11,
+                                                10,9,8,
+                                                7,6, 
+                                                5,
+                                                4,
+                                                3,
+                                                2,
+                                                1],
+                                         color:['#37A2DA']
+                                    }]
+                                };
+                                myChart4.setOption(option4);
+                            </script>
+                    </th>
+                    <!-- 5 start date -->
+                    <th>
+                            <div id="main5" style="width: 120px;height:80px;"></div>
+                            <script type="text/javascript">
+                                var myChart5 = echarts.init(document.getElementById('main5'));
+                                var option5 = {
+                                    title: {},
+                                    tooltip: {},
+                                    grid:{
+                                    x:0.1,
+                                    y:0.1,
+                                    x2:0.1,
+                                    y2:0.1
+                                    // borderWidth:1
+                                    },
+                                    legend: {
+                                    },
+                                    xAxis: {
+                                        data: ["Jaunary","February","March","April","May","June","July",
+                                                "August","September","October","November","December"]
+                                    },
+                                    yAxis: {    
+                                        show: false 
+                                    },
+                                    series: [{
+                                        type: 'bar',
+                                        data: [61,115,113,54,49,108,112,133,36,106,122,146],
+                                        color:['#37A2DA']
+                                    }]
+                                };
+                                myChart5.setOption(option5);
+                            </script>
+
+                    </th>
+                    <!--6 end LOCATION -->
+                    <th>
+                        <div id="main6" style="width: 160px;height:80px;"></div>
+                        <script type="text/javascript">
+                            var myChart6 = echarts.init(document.getElementById('main6'));
+                            var option6 = {
+                                title: {},
+                                grid:{
+                                    x:0.1,
+                                    y:0.1,
+                                    x2:0.1,
+                                    y2:0.1
+                                    // borderWidth:1
+                                    },
+                                tooltip: {},
+                                legend: {
+                                },
+                                xAxis: {
+                                    show: false,
+                                data: ["Cary","Unknown Location","Morrisville","Whitebridge","Islamabad",
+                                        "Durham,Lahore","Raleigh","Kar?chi","Apex",
+                                        "Westpark Place,Berkeley","R?walpindi,","Kissimmee","Midtown",
+                                        "'Edgehill Farms': 10, 'New Orleans': 10, 'Kenner': 10"," 'Emeryville': 9, 'Central': 9, ",
+                                        " 'Colombo': 8, 'San Francisco': 8, 'Oakland': 8, 'Banner Elk': 8",
+                                        "'Downtown': 7, 'The Drag': 7, 'Orlando': 7",
+                                        " 'Houston': 6, 'Preston': 6, 'Covington': 6",
+                                        "'Hazelwood': 5, 'Noorpur Shahan': 5, 'Waverly Place': 5, 'Weston': 5, 'Sharpstown': 5, 'Parkway': 5, 'Metairie': 5, 'Southside': 5, 'Bryson City': 5, 'Rawalpindi': 5",
+                                        "'Fort Pierce': 4, 'New York': 4, 'Tanglewood': 4, 'Wayne Ridge': 4, 'Kalorama Triangle': 4, 'Agnew': 4",
+                                        "'South Congress': 3, 'Congress Ave District': 3, 'Port Bolivar': 3, 'Chessington': 3, 'Menlo Park': 3, 'Savon Height': 3, 'Lexington Park at Amberly': 3, 'West Berkeley': 3",
+                                        "'West Palm Beach': 2, 'Hudson Square': 2, 'Jamestown Court': 2, 'Meredith Townes': 2, 'Leesville Hollow': 2, 'Macgregor Downs': 2, 'Northwoods': 2, 'Jamaica': 2, 'Katunayaka': 2, 'Heritage Pines': 2, 'West University': 2, 'Convention Center District': 2, 'North Austin': 2, 'Galveston': 2, 'Jacksonville': 2, 'Lake Reams': 2, 'Holly Springs': 2, 'Burtrose': 2, 'Capitol One': 2, 'Palo Alto': 2, 'Newark': 2, 'Kildaire Farms': 2, 'Storyville': 2, 'Pontchartrain Shores': 2, 'Mandeville': 2, 'CBD': 2, 'Newland': 2, 'Boone': 2, 'Karachi': 2, 'Asheville': 2, 'Topton': 2, 'Renaissance': 2, 'South': 2",
+                                        "'Palm Beach': 1, 'Queens': 1, 'East Harlem': 1, 'NoMad': 1, 'Midtown East': 1, 'Lower Manhattan': 1, 'Hell's Kitchen': 1, \
+                                            'Queens County': 1, 'Gulfton': 1, 'Lake Wellingborough': 1, 'Umstead': 1, 'Chapel Hill': 1, 'Williamsburg Manor': 1, \
+                                            'Walnut Terrace': 1, 'Jackson Heights': 1, 'East Elmhurst': 1, 'Midtown West': 1, 'Long Island City': 1, 'Nugegoda': 1, \
+                                            'Depot Historic District': 1, 'Arts District': 1, 'Red River District': 1, 'Coxville': 1, 'Katy': 1, 'Alief': 1, \
+                                            'Sugar Land': 1, 'Washington Avenue': 1, 'Briar Meadow': 1, 'Greater Greenspoint': 1, 'Latta': 1, 'Isles of Buena Vista': 1,\
+                                             'Vista East': 1, 'Sky Lake': 1, 'Sand Lake Commons': 1, 'Daytona Beach': 1, 'Ridgeland': 1, 'Florence': 1, 'Cedar Hill': 1, \
+                                             'Harden Place': 1, 'University District': 1, 'Redmond': 1, 'Bellevue': 1, 'Seattle': 1, 'Mcvan': 1, 'Sunnyvale': 1,\
+                                              'Parkway Museums': 1, 'Hog Island': 1, 'Kilarney Woods': 1, 'Gramercy-Flatiron': 1, 'Tudor City': 1, 'Soho': 1, \
+                                              'Tribeca': 1, 'Financial District': 1, 'Kips Bay': 1, 'Bay Farm Island': 1, 'Lower Garden District': 1, \
+                                              'Lakeview': 1, 'Faubourg Marigny': 1, 'Bywater': 1, 'Chalmette': 1, 'Arabi': 1, 'Marigny': 1, 'Summerwinds': 1, \
+                                              'Parkwood': 1, 'Pontchartrain Beach': 1, 'St Thomas': 1, 'Elk Park': 1, 'Stonewater': 1, 'Arlington Park at Amberly': 1,\
+                                               'Washington': 1, 'K Street': 1, 'Northwest Rectangle': 1, 'Columbia Heights': 1, 'Arlington': 1, 'Farmington Woods': 1,\
+                                                'Wake Forest': 1, 'French Quarter': 1, 'North Berkeley Hills': 1, 'San Jose': 1, 'Eagle Rock': 1, 'Huntington Woods': 1,\
+                                                 'Winston Salem': 1, 'Hayesville': 1, 'Almond': 1, 'Mebane': 1, 'Santa Clara': 1, 'Cory': 1, 'Sunnyside': 1, 'Ingleside': 1,\
+                                                  'Potrero Flats': 1, 'SOMISSPO': 1, 'Tenderloin': 1, 'College Avenue': 1, 'Southwest Berkeley': 1, 'South Berkeley': 1,\
+                                                   'Mountain View': 1, 'El Cerrito': 1, 'Wake Co.': 1, 'Fuquay-Varina': 1, 'Gampaha': 1, 'Ilukwatta': 1"
+                                        ]
+                                },
+                                yAxis: {    
+                                    show: false 
+                                },
+                                series: [{
+                                    type: 'bar',
+                                    data: [203,149,84,65,58,
+                                            36,29,26,17,
+                                            16,13,12,11,
+                                            10,9,
+                                            8,
+                                            7,
+                                            6, 
+                                            5,
+                                            4,
+                                            3,
+                                            2,
+                                            1],
+                                    color:['#37A2DA']
+                                }]
+                            };
+                            myChart6.setOption(option6);
+                        </script>             
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+            </table>
+
+        </div>
+    </div>
+    <script>
+        var config = {
+            apiKey: "AIzaSyA1VQOAtkGbdNbpQKVD9hI0VYtBmRq6j8I",
+            authDomain: "project551.firebaseapp.com",
+            databaseURL: "https://project551.firebaseio.com",
+            projectId: "project551",
+            storageBucket: "project551.appspot.com",
+            messagingSenderId: "227141625715",
+            appId: "1:227141625715:web:a12885fbb115acf6fd8706",
+            measurementId: "G-S6YXCTHX32"
+        };
+        firebase.initializeApp(config);
+        // Get a reference to the database service
+        var database = firebase.database();
+        var myuber = database.ref('/index/');
+        var djson;
+
+        myuber.on('value', function(snapshot){
+            djson = JSON.parse(JSON.stringify(snapshot.val()));
+            console.log(djson);
+            var tr = "";
+            for(x in djson){
+                if(djson[x] != null){
+                    tr += "<tr>";
+                    tr += "<td>"+x+"</td>";
+                    tr += "<td>"+djson[x]["CATEGORY"]+"</td>";
+                    tr += "<td>"+djson[x]["END_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["MILES"]+"</td>";
+                    tr += "<td>"+djson[x]["PURPOSE"]+"</td>";
+                    tr += "<td>"+djson[x]["START"]+"</td>";
+                    tr += "<td>"+djson[x]["START_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["STOP"]+"</td>";
+                    tr += "</tr>";
+                }    
+            }
+            document.querySelector("table tbody").innerHTML = tr;
+        });
+    </script>
+    <script>
+    //done
+    function default_(){
+        var database = firebase.database();
+        var myuber = database.ref('/index/');
+        var djson;
+
+        myuber.on('value', function(snapshot){
+            djson = JSON.parse(JSON.stringify(snapshot.val()));
+            console.log(djson);
+            var tr = "";
+            for(x in djson){
+                if(djson[x] != null){
+                    tr += "<tr>";
+                    tr += "<td>"+x+"</td>";
+                    tr += "<td>"+djson[x]["CATEGORY"]+"</td>";
+                    tr += "<td>"+djson[x]["END_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["MILES"]+"</td>";
+                    tr += "<td>"+djson[x]["PURPOSE"]+"</td>";
+                    tr += "<td>"+djson[x]["START"]+"</td>";
+                    tr += "<td>"+djson[x]["START_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["STOP"]+"</td>";
+                    tr += "</tr>";
+                }    
+            }
+
+            document.querySelector("table tbody").innerHTML = tr;
+        });
+    }
+
+    // #升序
+    function up_compare(property){
+        return function(obj1, obj2) {
+            var value1 = obj1[property];
+            var value2 = obj2[property];
+            return value1 - value2;
+        }
+        // var sortObj = infoObj.sort(compare())
+    }
+    // #降序
+    function down_compare(property){
+        return function(obj1, obj2) {
+            var value1 = obj1[property];
+            var value2 = obj2[property];
+            return value2 - value1;
+        }
+    }
+
+    // 字典跟array的exchange
+    function jsonToArray (obj) {
+        // const obj = JSON.parse(str);
+        const result = [];
+        for (let key in obj) {
+            // result.push(key);
+            result.push(obj[key]);
+        }
+        return result;
+    }
+
+    //done
+    function mile_sort_up(){
+        var database = firebase.database();
+        var mile_ = database.ref('/index').orderByChild('MILES').limitToFirst(500);
+        var djson;
+
+        mile_.on('value', function(snapshot){
+
+            djson_ = JSON.parse(JSON.stringify(snapshot.val()));
+            djson = jsonToArray(djson_)
+            console.log(djson)
+            djson = djson.sort(up_compare("MILES"));
+            console.log(djson);
+
+            var tr = "";
+            var i = 1;
+            for(x in djson){
+                if(djson[x] != null){
+                    tr += "<tr>";
+                    tr += "<td>"+i+"</td>";
+                    tr += "<td>"+djson[x]["CATEGORY"]+"</td>";
+                    tr += "<td>"+djson[x]["END_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["MILES"]+"</td>";
+                    tr += "<td>"+djson[x]["PURPOSE"]+"</td>";
+                    tr += "<td>"+djson[x]["START"]+"</td>";
+                    tr += "<td>"+djson[x]["START_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["STOP"]+"</td>";
+                    tr += "</tr>";
+                    i++;
+                }    
+            }
+            // tr.sort()
+            document.querySelector("table tbody").innerHTML = tr;
+        });
+    }
+    //done
+    function mile_sort_down(){
+        var mile_ = database.ref('/index/').orderByChild('MILES').limitToLast(500);
+        var djson;
+        // console.log(mile_sort);
+        mile_.on('value', function(snapshot){
+
+            djson_ = JSON.parse(JSON.stringify(snapshot.val()));
+            djson = jsonToArray(djson_)
+            console.log(djson)
+            djson = djson.sort(down_compare("MILES"));
+            console.log(djson);
+
+            var tr = "";
+            var i = 1;
+            for(x in djson){
+                if(djson[x] != null){
+                    tr += "<tr>";
+                    tr += "<td>"+i+"</td>";
+                    tr += "<td>"+djson[x]["CATEGORY"]+"</td>";
+                    tr += "<td>"+djson[x]["END_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["MILES"]+"</td>";
+                    tr += "<td>"+djson[x]["PURPOSE"]+"</td>";
+                    tr += "<td>"+djson[x]["START"]+"</td>";
+                    tr += "<td>"+djson[x]["START_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["STOP"]+"</td>";
+                    tr += "</tr>";
+                    i++
+                }    
+            }
+            // tr.sort()
+            document.querySelector("table tbody").innerHTML = tr;
+        });
+    }
+
+    //done
+    function up_date(property){
+        return function(obj1, obj2) {
+            var value1 = obj1[property];
+            var value2 = obj2[property];
+            return (value1 - value2)?-1:1;
+        }
+    }
+    //done
+    function down_date(property){
+        return function(obj1, obj2) {
+            var value1 = obj1[property];
+            var value2 = obj2[property];
+            return (value2 - value1)?1:-1;
+        }
+    }
+    //done
+    function enddate_sort_up(){
+        var mile_ = database.ref('/index').orderByChild('END_DATE').limitToFirst(500);
+        var djson;
+        // console.log(mile_sort);
+        mile_.on('value', function(snapshot){
+
+            djson_ = JSON.parse(JSON.stringify(snapshot.val()));
+            djson = jsonToArray(djson_)
+            console.log(djson)
+            djson = djson.sort(up_date("END_DATE"));
+            console.log(djson);
+
+            var tr = "";
+            var i = 1;
+            for(x in djson){
+                if(djson[x] != null){
+                    tr += "<tr>";
+                    tr += "<td>"+i+"</td>";
+                    tr += "<td>"+djson[x]["CATEGORY"]+"</td>";
+                    tr += "<td>"+djson[x]["END_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["MILES"]+"</td>";
+                    tr += "<td>"+djson[x]["PURPOSE"]+"</td>";
+                    tr += "<td>"+djson[x]["START"]+"</td>";
+                    tr += "<td>"+djson[x]["START_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["STOP"]+"</td>";
+                    tr += "</tr>";
+                    i++
+                }    
+            }
+            // tr.sort()
+            document.querySelector("table tbody").innerHTML = tr;
+        });
+    }
+    //done
+    function enddate_sort_down(){
+        var database = firebase.database();
+        var myuber = database.ref('/index/').orderByChild('END_DATE').limitToFirst(500);
+        var djson;
+
+        myuber.on('value', function(snapshot){
+            djson_ = JSON.parse(JSON.stringify(snapshot.val()));
+            console.log(djson_);
+            djson = jsonToArray(djson_)
+            console.log(djson)
+            djson.sort(down_date("END_DATE"));
+            // console.log(djson);
+
+
+            var tr = "";
+            var i = 1;
+            for(x in djson){
+                if(djson[x] != null){
+                    tr += "<tr>";
+                    tr += "<td>"+i+"</td>";
+                    tr += "<td>"+djson[x]["CATEGORY"]+"</td>";
+                    tr += "<td>"+djson[x]["END_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["MILES"]+"</td>";
+                    tr += "<td>"+djson[x]["PURPOSE"]+"</td>";
+                    tr += "<td>"+djson[x]["START"]+"</td>";
+                    tr += "<td>"+djson[x]["START_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["STOP"]+"</td>";
+                    tr += "</tr>";
+                    i++
+                }    
+            }
+
+            document.querySelector("table tbody").innerHTML = tr;
+        });
+    }
+    //done
+    function startdate_sort_up(){
+        var mile_ = database.ref('/index').orderByChild('START_DATE').limitToFirst(500);
+        var djson;
+        // console.log(mile_sort);
+        mile_.on('value', function(snapshot){
+
+            djson_ = JSON.parse(JSON.stringify(snapshot.val()));
+            djson = jsonToArray(djson_)
+            console.log(djson)
+            djson = djson.sort(up_date("START_DATE"));
+            console.log(djson);
+
+            var tr = "";
+            var i = 1;
+            for(x in djson){
+                if(djson[x] != null){
+                    tr += "<tr>";
+                    tr += "<td>"+i+"</td>";
+                    tr += "<td>"+djson[x]["CATEGORY"]+"</td>";
+                    tr += "<td>"+djson[x]["END_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["MILES"]+"</td>";
+                    tr += "<td>"+djson[x]["PURPOSE"]+"</td>";
+                    tr += "<td>"+djson[x]["START"]+"</td>";
+                    tr += "<td>"+djson[x]["START_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["STOP"]+"</td>";
+                    tr += "</tr>";
+                    i++
+                }    
+            }
+            // tr.sort()
+            document.querySelector("table tbody").innerHTML = tr;
+        });
+    }
+    //done
+    function startdate_sort_down(){
+        var database = firebase.database();
+        var myuber = database.ref('/index/').orderByChild('START_DATE').limitToFirst(500);
+        var djson;
+
+        myuber.on('value', function(snapshot){
+            djson_ = JSON.parse(JSON.stringify(snapshot.val()));
+            console.log(djson_);
+            djson = jsonToArray(djson_)
+            console.log(djson)
+            djson.sort(down_date("START_DATE"));
+            // console.log(djson);
+
+
+            var tr = "";
+            var i = 1;
+            for(x in djson){
+                if(djson[x] != null){
+                    tr += "<tr>";
+                    tr += "<td>"+i+"</td>";
+                    tr += "<td>"+djson[x]["CATEGORY"]+"</td>";
+                    tr += "<td>"+djson[x]["END_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["MILES"]+"</td>";
+                    tr += "<td>"+djson[x]["PURPOSE"]+"</td>";
+                    tr += "<td>"+djson[x]["START"]+"</td>";
+                    tr += "<td>"+djson[x]["START_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["STOP"]+"</td>";
+                    tr += "</tr>";
+                    i++
+                }    
+            }
+
+            document.querySelector("table tbody").innerHTML = tr;
+        });
+    }
+
+    //done
+    function catalog_sort_up(){
+        var catalog_ = database.ref('/index').orderByChild('CATEGORY').equalTo('Business');
+        var djson;
+
+        catalog_.on('value', function(snapshot){
+            djson_ = JSON.parse(JSON.stringify(snapshot.val()));
+            djson = jsonToArray(djson_)
+            console.log(djson)
+            // djson = djson.sort(up_compare("CATEGORY"));
+            // console.log(djson);
+
+            var tr = "";
+            var i = 1;
+            for(x in djson){
+                if(djson[x] != null){
+                    tr += "<tr>";
+                    tr += "<td>"+i+"</td>";
+                    tr += "<td>"+djson[x]["CATEGORY"]+"</td>";
+                    tr += "<td>"+djson[x]["END_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["MILES"]+"</td>";
+                    tr += "<td>"+djson[x]["PURPOSE"]+"</td>";
+                    tr += "<td>"+djson[x]["START"]+"</td>";
+                    tr += "<td>"+djson[x]["START_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["STOP"]+"</td>";
+                    tr += "</tr>";
+                    i ++;
+                }    
+            }
+            document.querySelector("table tbody").innerHTML = tr;
+        });
+    }
+    //done
+    function catalog_sort_down(){
+        var catalog_ = database.ref('/index').orderByChild('CATEGORY').equalTo('Personal');
+        var djson;
+
+        catalog_.on('value', function(snapshot){
+            djson_ = JSON.parse(JSON.stringify(snapshot.val()));
+            djson = jsonToArray(djson_)
+            console.log(djson)
+            djson = djson.sort(down_compare("CATEGORY"));
+            console.log(djson);
+
+            var tr = "";
+            var i = 1;
+            for(x in djson){
+                if(djson[x] != null){
+                    tr += "<tr>";
+                    tr += "<td>"+i+"</td>";
+                    tr += "<td>"+djson[x]["CATEGORY"]+"</td>";
+                    tr += "<td>"+djson[x]["END_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["MILES"]+"</td>";
+                    tr += "<td>"+djson[x]["PURPOSE"]+"</td>";
+                    tr += "<td>"+djson[x]["START"]+"</td>";
+                    tr += "<td>"+djson[x]["START_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["STOP"]+"</td>";
+                    tr += "</tr>";
+                    i ++;
+                }    
+            }
+            document.querySelector("table tbody").innerHTML = tr;
+        });
+    }
+
+    function up_string(property){
+        return function(obj1, obj2) {
+            var value1 = obj1[property];
+            var value2 = obj2[property];
+            return (value1 > value2)?1:-1;
+        }
+        // var sortObj = infoObj.sort(compare())
+    }
+    function down_string(property){
+        return function(obj1, obj2) {
+            var value1 = obj1[property];
+            var value2 = obj2[property];
+            return (value2 > value1)?1:-1;
+        }
+        // var sortObj = infoObj.sort(compare())
+    }
+    //done
+    function purpose_sort_up(){
+        var purpose_ = database.ref('/index').orderByChild('PURPOSE').limitToFirst(500);
+        var djson;
+
+        purpose_.on('value', function(snapshot){
+            djson_ = JSON.parse(JSON.stringify(snapshot.val()));
+            djson = jsonToArray(djson_)
+            console.log(djson)
+            djson = djson.sort(up_string("PURPOSE"));
+            console.log(djson);
+            var tr = "";
+            for(x in djson){
+                if(djson[x] != null){
+                    tr += "<tr>";
+                    tr += "<td>"+x+"</td>";
+                    tr += "<td>"+djson[x]["CATEGORY"]+"</td>";
+                    tr += "<td>"+djson[x]["END_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["MILES"]+"</td>";
+                    tr += "<td>"+djson[x]["PURPOSE"]+"</td>";
+                    tr += "<td>"+djson[x]["START"]+"</td>";
+                    tr += "<td>"+djson[x]["START_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["STOP"]+"</td>";
+                    tr += "</tr>";
+                }    
+            }
+            document.querySelector("table tbody").innerHTML = tr;
+        });
+    } 
+    //done
+    function purpose_sort_down(){
+        var purpose_ = database.ref('/index').orderByChild('PURPOSE').limitToLast(500);
+        var djson;
+
+        purpose_.on('value', function(snapshot){
+            djson_ = JSON.parse(JSON.stringify(snapshot.val()));
+            djson = jsonToArray(djson_)
+            console.log(djson)
+
+            djson = djson.sort(down_string("PURPOSE"));
+            console.log(djson);
+            var tr = "";
+            for(x in djson){
+                if(djson[x] != null){
+                    tr += "<tr>";
+                    tr += "<td>"+x+"</td>";
+                    tr += "<td>"+djson[x]["CATEGORY"]+"</td>";
+                    tr += "<td>"+djson[x]["END_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["MILES"]+"</td>";
+                    tr += "<td>"+djson[x]["PURPOSE"]+"</td>";
+                    tr += "<td>"+djson[x]["START"]+"</td>";
+                    tr += "<td>"+djson[x]["START_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["STOP"]+"</td>";
+                    tr += "</tr>";
+                }    
+            }
+            document.querySelector("table tbody").innerHTML = tr;
+        });
+    } 
+    //done
+    function start_sort_up(){
+        var purpose_ = database.ref('/index/').orderByChild('START').limitToFirst(500);
+        var djson;
+
+        purpose_.on('value', function(snapshot){
+            djson_ = JSON.parse(JSON.stringify(snapshot.val()));
+            djson = jsonToArray(djson_)
+            console.log(djson)
+            djson = djson.sort(up_string("START"));
+            console.log(djson);
+            var tr = "";
+            for(x in djson){
+                if(djson[x] != null){
+                    tr += "<tr>";
+                    tr += "<td>"+x+"</td>";
+                    tr += "<td>"+djson[x]["CATEGORY"]+"</td>";
+                    tr += "<td>"+djson[x]["END_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["MILES"]+"</td>";
+                    tr += "<td>"+djson[x]["PURPOSE"]+"</td>";
+                    tr += "<td>"+djson[x]["START"]+"</td>";
+                    tr += "<td>"+djson[x]["START_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["STOP"]+"</td>";
+                    tr += "</tr>";
+                }    
+            }
+            document.querySelector("table tbody").innerHTML = tr;
+        });
+    } 
+    //done
+    function start_sort_down(){
+        var purpose_ = database.ref('/index/').orderByChild('START').limitToLast(500);
+        var djson;
+
+        purpose_.on('value', function(snapshot){
+            djson_ = JSON.parse(JSON.stringify(snapshot.val()));
+            djson = jsonToArray(djson_)
+            console.log(djson)
+            djson = djson.sort(down_string("START"));
+            console.log(djson);
+            var tr = "";
+            for(x in djson){
+                if(djson[x] != null){
+                    tr += "<tr>";
+                    tr += "<td>"+x+"</td>";
+                    tr += "<td>"+djson[x]["CATEGORY"]+"</td>";
+                    tr += "<td>"+djson[x]["END_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["MILES"]+"</td>";
+                    tr += "<td>"+djson[x]["PURPOSE"]+"</td>";
+                    tr += "<td>"+djson[x]["START"]+"</td>";
+                    tr += "<td>"+djson[x]["START_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["STOP"]+"</td>";
+                    tr += "</tr>";
+                }    
+            }
+            document.querySelector("table tbody").innerHTML = tr;
+        });
+    }
+
+    //done
+    function destination_sort_up(){
+        var purpose_ = database.ref('/index/').orderByChild('STOP').limitToFirst(500);
+        var djson;
+
+        purpose_.on('value', function(snapshot){
+            djson_ = JSON.parse(JSON.stringify(snapshot.val()));
+            djson = jsonToArray(djson_)
+            console.log(djson)
+            djson = djson.sort(up_string("STOP"));
+            console.log(djson);
+            var tr = "";
+            for(x in djson){
+                if(djson[x] != null){
+                    tr += "<tr>";
+                    tr += "<td>"+x+"</td>";
+                    tr += "<td>"+djson[x]["CATEGORY"]+"</td>";
+                    tr += "<td>"+djson[x]["END_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["MILES"]+"</td>";
+                    tr += "<td>"+djson[x]["PURPOSE"]+"</td>";
+                    tr += "<td>"+djson[x]["START"]+"</td>";
+                    tr += "<td>"+djson[x]["START_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["STOP"]+"</td>";
+                    tr += "</tr>";
+                }    
+            }
+            document.querySelector("table tbody").innerHTML = tr;
+        });
+    } 
+    //done
+    function destination_sort_down(){
+        var purpose_ = database.ref('/index/').orderByChild('STOP').limitToLast(500);
+        var djson;
+
+        purpose_.on('value', function(snapshot){
+            djson_ = JSON.parse(JSON.stringify(snapshot.val()));
+            djson = jsonToArray(djson_)
+            console.log(djson)
+            djson = djson.sort(down_string("STOP"));
+            console.log(djson);
+            var tr = "";
+            for(x in djson){
+                if(djson[x] != null){
+                    tr += "<tr>";
+                    tr += "<td>"+x+"</td>";
+                    tr += "<td>"+djson[x]["CATEGORY"]+"</td>";
+                    tr += "<td>"+djson[x]["END_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["MILES"]+"</td>";
+                    tr += "<td>"+djson[x]["PURPOSE"]+"</td>";
+                    tr += "<td>"+djson[x]["START"]+"</td>";
+                    tr += "<td>"+djson[x]["START_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["STOP"]+"</td>";
+                    tr += "</tr>";
+                }    
+            }
+            document.querySelector("table tbody").innerHTML = tr;
+        });
+    } 
+
+    //to be continue...
+    function search_catalogy(){
+        var srearchItem = document.getElementById("search_item_1").value;
+        console.log(srearchItem)
+        var purpose_ = database.ref('/index').orderByChild('CATALOGY').equalTo(srearchItem);
+        var djson;
+
+        purpose_.on('value', function(snapshot){
+            djson_ = JSON.parse(JSON.stringify(snapshot.val()));
+            djson = jsonToArray(djson_)
+            console.log(djson)
+
+            var tr = "";
+            var i = 1;
+            for(x in djson){
+                if(djson[x] != null){
+                    tr += "<tr>";
+                    tr += "<td>"+i+"</td>";
+                    tr += "<td>"+djson[x]["CATEGORY"]+"</td>";
+                    tr += "<td>"+djson[x]["END_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["MILES"]+"</td>";
+                    tr += "<td>"+djson[x]["PURPOSE"]+"</td>";
+                    tr += "<td>"+djson[x]["START"]+"</td>";
+                    tr += "<td>"+djson[x]["START_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["STOP"]+"</td>";
+                    tr += "</tr>";
+                    i ++; 
+                }    
+            }
+            document.querySelector("table tbody").innerHTML = tr;
+        });
+    }
+    //done
+    function search_purpose(){
+        var srearchItem = document.getElementById("search_item_2").value;
+        console.log(srearchItem)
+        var purpose_ = database.ref('/index').orderByChild('PURPOSE').equalTo(srearchItem);
+        var djson;
+
+        purpose_.on('value', function(snapshot){
+            djson_ = JSON.parse(JSON.stringify(snapshot.val()));
+
+            djson = jsonToArray(djson_)
+            console.log(djson)
+
+            // djson = djson.sort(up_compare("PURPOSE"));
+            // console.log(djson);
+            
+            var tr = "";
+            var i = 1;
+            for(x in djson){
+                if(djson[x] != null){
+                    tr += "<tr>";
+                    tr += "<td>"+i+"</td>";
+                    tr += "<td>"+djson[x]["CATEGORY"]+"</td>";
+                    tr += "<td>"+djson[x]["END_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["MILES"]+"</td>";
+                    tr += "<td>"+djson[x]["PURPOSE"]+"</td>";
+                    tr += "<td>"+djson[x]["START"]+"</td>";
+                    tr += "<td>"+djson[x]["START_DATE"]+"</td>";
+                    tr += "<td>"+djson[x]["STOP"]+"</td>";
+                    tr += "</tr>";
+                    i ++; 
+                }    
+            }
+            document.querySelector("table tbody").innerHTML = tr;
+        });
+    }
+
+    function range_(){
+        var small_ = 0;
+        var big_ = 500;
+        if(document.getElementById("small_").value != null ){
+            small_ = document.getElementById("small_").value;}
+        console.log(small_)
+
+        if(document.getElementById("big_").value != null ){
+            big_ = document.getElementById("big_").value;}
+
+        console.log(big_)
+
+        var mile_;
+        mile_ = database.ref('/index/');
+        var djson;
+        var djson_;
+
+        mile_.on('value', function(snapshot){
+            djson_ = JSON.parse(JSON.stringify(snapshot.val()));
+            djson = jsonToArray(djson_);
+            console.log(djson);
+
+            var tr = "";
+            var i = 1;
+            for(x in djson){
+                if(djson[x] != null){
+                    if(djson[x]["MILES"] >= small_ && djson[x]["MILES"] <= big_){
+                        tr += "<tr>";
+                        tr += "<td>"+i+"</td>";
+                        tr += "<td>"+djson[x]["CATEGORY"]+"</td>";
+                        tr += "<td>"+djson[x]["END_DATE"]+"</td>";
+                        tr += "<td>"+djson[x]["MILES"]+"</td>";
+                        tr += "<td>"+djson[x]["PURPOSE"]+"</td>";
+                        tr += "<td>"+djson[x]["START"]+"</td>";
+                        tr += "<td>"+djson[x]["START_DATE"]+"</td>";
+                        tr += "<td>"+djson[x]["STOP"]+"</td>";
+                        tr += "</tr>";
+                        i ++;   
+                    }  
+                }    
+            }
+            document.querySelector("table tbody").innerHTML = tr;
+        });
+
+    }
+
+    </script>
+
+
+</body>
+</html>
+
+
